@@ -1,0 +1,36 @@
+[
+ ;; DM5 Object
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5.object/uri
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/doc "An DM5 object's URI"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5.object/type-uri
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/doc "An DM5 object's type URI"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5.object/string-value
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/doc "An DM5 object's string value"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5.object/number-value
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/doc "An DM5 object's long value"
+  :db.install/_attribute :db.part/db}
+
+]
