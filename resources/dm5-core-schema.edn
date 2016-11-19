@@ -1,20 +1,27 @@
 [
- ;; DM5 Object
+  ;; Entity-Type
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5/entity-type
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "A DM5 entity type (topic or assoc)"
+  :db.install/_attribute :db.part/db}
+
+  ;; DM5 Object
 
  {:db/id #db/id[:db.part/db]
   :db/ident :dm5.object/uri
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/fulltext true
-  :db/doc "An DM5 object's URI"
+  :db/doc "A DM5 object's URI"
   :db.install/_attribute :db.part/db}
 
  {:db/id #db/id[:db.part/db]
-  :db/ident :dm5.object/type-uri
+  :db/ident :dm5.object/type
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/fulltext true
-  :db/doc "An DM5 object's type URI"
+  :db/doc "A DM5 object's type (URI)"
   :db.install/_attribute :db.part/db}
 
  {:db/id #db/id[:db.part/db]
@@ -22,15 +29,44 @@
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/fulltext true
-  :db/doc "An DM5 object's string value"
+  :db/doc "A DM5 object's string value"
   :db.install/_attribute :db.part/db}
 
  {:db/id #db/id[:db.part/db]
   :db/ident :dm5.object/number-value
   :db/valueType :db.type/long
   :db/cardinality :db.cardinality/one
-  :db/fulltext true
-  :db/doc "An DM5 object's long value"
+  :db/doc "A DM5 object's long value"
   :db.install/_attribute :db.part/db}
 
+  ;; Role
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5.role/player
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "A role's player ID"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5.role/type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A role's type (URI)"
+  :db.install/_attribute :db.part/db}
+
+  ;; Association
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :dm5.assoc/role
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/isComponent true
+  :db/doc "An association's 2 roles"
+  :db.install/_attribute :db.part/db}
+
+  ;; Entity-type enum values
+
+  [:db/add #db/id[:db.part/user] :db/ident :dm5.entity-type/topic]
+  [:db/add #db/id[:db.part/user] :db/ident :dm5.entity-type/assoc]
 ]
