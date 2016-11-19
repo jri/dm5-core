@@ -35,16 +35,20 @@
 (defn all-assocs [] (d/q '[:find (pull ?p [*]) :where [?p :dm5/entity-type :dm5.entity-type/assoc]] (d/db conn)))
 
 (defn create-topic [uri type value]
-  @(d/transact conn [{:db/id #db/id[:db.part/user]
-                      :dm5/entity-type :dm5.entity-type/topic
-                      :dm5.object/uri uri
-                      :dm5.object/type type
-                      :dm5.object/string-value value}]))
+  (let [tempid (d/tempid :db.part/user)
+        tx-info @(d/transact conn [{:db/id tempid
+                               :dm5/entity-type :dm5.entity-type/topic
+                               :dm5.object/uri uri
+                               :dm5.object/type type
+                               :dm5.object/string-value value}])]
+       (d/resolve-tempid (d/db conn) (:tempids tx-info) tempid)))
 
 (defn create-assoc [uri type value roles]
-  @(d/transact conn [{:db/id #db/id[:db.part/user]
-                      :dm5/entity-type :dm5.entity-type/assoc
-                      :dm5.object/uri uri
-                      :dm5.object/type type
-                      :dm5.object/string-value value
-                      :dm5.assoc/role roles}]))
+  (let [tempid (d/tempid :db.part/user)
+        tx-info @(d/transact conn [{:db/id tempid
+                               :dm5/entity-type :dm5.entity-type/assoc
+                               :dm5.object/uri uri
+                               :dm5.object/type type
+                               :dm5.object/string-value value
+                               :dm5.assoc/role roles}])]
+       (d/resolve-tempid (d/db conn) (:tempids tx-info ) tempid)))
