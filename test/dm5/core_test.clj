@@ -1,6 +1,6 @@
-(ns dm5-core.core-test
+(ns dm5.core-test
   (:require [clojure.test :refer :all]
-            [dm5-core.core :refer :all]))
+            [dm5.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

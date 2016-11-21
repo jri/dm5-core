@@ -6,6 +6,5 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [com.datomic/datomic-pro "0.9.5407"]]
   :profiles {:uberjar {:aot :all}}
-  :repl-options {:init-ns dm5.core
-                 :init (install-schema "resources/dm5-core-schema.edn")}
+  :repl-options {:init-ns dm5.core}
 )
