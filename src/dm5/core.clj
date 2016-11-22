@@ -35,29 +35,29 @@
 ;; traversal
 
 (declare traversal-query)
-(declare assoc-type-filter)
+(declare add-filter)
 
 (defn fetch-related-topics
-  "1-hop traversal
-  opts is a map with 4 optional entries :assoc-type :my-role-type :others-role-type :others-topic-type"
-  ([id] (fetch-related-topics id nil))
-  ([id opts] (let [query (traversal-query id opts)]
-                  (apply d/q {:find '[?t ?a]
-                              :in (query :in)
-                              :where (query :where)} (d/db conn) rule-set (query :args)))))
+  ;; TODO: rather pass map instead of varargs in favor for prgrammatic calling
+  [id & {:keys [:assoc-type :my-role-type :others-role-type :others-type] :as opts}]
+  (let [query (traversal-query id opts)]
+       (apply d/q {:find '[?t ?a]
+                   :in (query :in)
+                   :where (query :where)} (d/db conn) rule-set (query :args))))
 
 (defn traversal-query
-  "Returns a traveral query, a map with 4 entries :in :where :args :opts"
+  "Returns a traveral query, a map with 3 entries :in :where :args"
   [id opts]
   (let [query {:in '[$ % ?id] :where '[(related-topic ?id ?t ?a)] :args [id]}]
-       (-> query (assoc-type-filter opts))))
+       (-> query (add-filter opts :assoc-type  '?at '(object-type ?a ?at))
+                 (add-filter opts :others-type '?ot '(object-type ?t ?ot)))))
 
-(defn assoc-type-filter [query opts]
-  (let [at (:assoc-type opts)]
-       (if at {:in    (conj (:in    query) '?at)
-               :where (conj (:where query) '(object-type ?a ?at))
-               :args  (conj (:args  query) at)}
-              query)))
+(defn add-filter [query opts opt-key in-sym where-sym]
+  (let [opt-val (opt-key opts)]
+       (if opt-val (-> query (update-in [:in]    conj in-sym)
+                             (update-in [:where] conj where-sym)
+                             (update-in [:args]  conj opt-val))
+                   query)))
 
 ;;
 
