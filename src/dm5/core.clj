@@ -16,7 +16,7 @@
 
 (def rule-set '[
   ;; 1-hop traversal: ?t is related to ?rel-t via ?a
-  [(related-topic ?t ?rel-t ?a)
+  [(related-topic ?t ?rel-t ?a ?r1 ?r2)
    [?r1 :dm5.role/player ?t]
    [?a :dm5.assoc/role ?r1]
    [?a :dm5.assoc/role ?r2]
@@ -34,30 +34,35 @@
 
 ;; traversal
 
-(declare traversal-query)
+(declare query-builder)
 (declare add-filter)
 
 (defn fetch-related-topics
   ;; TODO: rather pass map instead of varargs in favor for prgrammatic calling
   [id & {:keys [:assoc-type :my-role-type :others-role-type :others-type] :as opts}]
-  (let [query (traversal-query id opts)]
-       (apply d/q {:find '[?t ?a]
-                   :in (query :in)
-                   :where (query :where)} (d/db conn) rule-set (query :args))))
+  (let [builder (query-builder id opts)]
+       (apply d/q (:query builder) (d/db conn) rule-set (:args builder))))
 
-(defn traversal-query
-  "Returns a traveral query, a map with 3 entries :in :where :args"
+(defn query-builder
+  "Returns a query builder for doing a 1-hop traversal starting at id. The traversal can be constrained by the opts map.
+  The options map can contain these 4 keys: :assoc-type :my-role-type :others-role-type :others-type, all are optional.
+  The returned builder has this structure:
+      {:query {:find [] :in [] :where []}
+       :args []}"
   [id opts]
-  (let [query {:in '[$ % ?id] :where '[(related-topic ?id ?t ?a)] :args [id]}]
-       (-> query (add-filter opts :assoc-type  '?at '(object-type ?a ?at))
-                 (add-filter opts :others-type '?ot '(object-type ?t ?ot)))))
+  (let [builder {:query {:find '[?t ?a] :in '[$ % ?id] :where '[(related-topic ?id ?t ?a ?r1 ?r2)]}
+                 :args [id]}]
+       (-> builder (add-filter opts :assoc-type       '?at  '(object-type ?a  ?at))
+                   (add-filter opts :my-role-type     '?rt1 '(role-type   ?r1 ?rt1))
+                   (add-filter opts :others-role-type '?rt2 '(role-type   ?r2 ?rt2))
+                   (add-filter opts :others-type      '?ot  '(object-type ?t  ?ot)))))
 
-(defn add-filter [query opts opt-key in-sym where-sym]
+(defn add-filter [builder opts opt-key in-sym where-sym]
   (let [opt-val (opt-key opts)]
-       (if opt-val (-> query (update-in [:in]    conj in-sym)
-                             (update-in [:where] conj where-sym)
-                             (update-in [:args]  conj opt-val))
-                   query)))
+       (if opt-val (-> builder (update-in [:query :in]    conj in-sym)
+                               (update-in [:query :where] conj where-sym)
+                               (update-in [:args]         conj opt-val))
+                   builder)))
 
 ;;
 
