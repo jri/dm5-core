@@ -74,11 +74,14 @@
 ;;
 
 (defn fetch-by-type [type]
-  (d/q '[:find ?o :in $ % ?t :where (object-type ?o ?t)] (d/db conn) rules type))
+  (d/q '[:find [?o ...] :in $ % ?t :where (object-type ?o ?t)] (d/db conn) rules type))
 
 (defn fetch-by-value [type value]
-  (d/q '[:find ?o :in $ % ?t ?v :where (object-type ?o ?t)
-                                       (object-value ?o ?v)] (d/db conn) rules type value))
+  (let [result (d/q '[:find [?o ...] :in $ % ?t ?v :where (object-type ?o ?t)
+                                                          (object-value ?o ?v)] (d/db conn) rules type value)
+        count (count result)]
+       (assert (<= count 1) (str "Result is not unique " type " \"" value "\" -> " count " items " result))
+       (if (empty? result) nil (first result))))
 
 ;;
 
