@@ -41,14 +41,12 @@
 
 ;; traversal
 
-(declare query-builder)
-(declare add-filter)
-
-(defn fetch-related-topics
-  ;; TODO: rather pass map instead of varargs in favor for prgrammatic calling
-  [id & {:keys [:assoc-type :my-role-type :others-role-type :others-type] :as opts}]
-  (let [builder (query-builder id opts)]
-       (apply d/q (:query builder) (:args builder))))
+(defn- add-filter [builder opts opt-key in-sym where-sym]
+  (let [opt-val (opt-key opts)]
+       (if opt-val (-> builder (update-in [:query :in]    conj in-sym)
+                               (update-in [:query :where] conj where-sym)
+                               (update-in [:args]         conj opt-val))
+                   builder)))
 
 (defn- query-builder
   "Returns a query builder for a 1-hop traversal that starts at id and is constrained by the opts map.
@@ -64,12 +62,11 @@
                    (add-filter opts :others-role-type '?rt2 '(role-type   ?r2 ?rt2))
                    (add-filter opts :others-type      '?ot  '(object-type ?t  ?ot)))))
 
-(defn- add-filter [builder opts opt-key in-sym where-sym]
-  (let [opt-val (opt-key opts)]
-       (if opt-val (-> builder (update-in [:query :in]    conj in-sym)
-                               (update-in [:query :where] conj where-sym)
-                               (update-in [:args]         conj opt-val))
-                   builder)))
+(defn fetch-related-topics
+  ;; TODO: rather pass map instead of varargs in favor for prgrammatic calling
+  [id & {:keys [:assoc-type :my-role-type :others-role-type :others-type] :as opts}]
+  (let [builder (query-builder id opts)]
+       (apply d/q (:query builder) (:args builder))))
 
 ;;
 
