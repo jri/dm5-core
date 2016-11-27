@@ -63,7 +63,9 @@
                    (add-filter opts :others-type      '?ot  '(object-type ?t  ?ot)))))
 
 (defn fetch-related-topics
-  ;; TODO: rather pass map instead of varargs in favor for prgrammatic calling
+  "Returns a set of 2-element vectors:
+      #{[rel-topic-id assoc-id]}"
+  ;; TODO: rather pass map instead of varargs in favor for prgrammatic calling?
   [id & {:keys [:assoc-type :my-role-type :others-role-type :others-type] :as opts}]
   (let [builder (query-builder id opts)]
        (apply d/q (:query builder) (:args builder))))
@@ -77,8 +79,8 @@
   (let [result (d/q '[:find [?o ...] :in $ % ?t ?v :where (object-type ?o ?t)
                                                           (object-value ?o ?v)] (d/db conn) rules type value)
         count (count result)]
-       (assert (<= count 1) (str "Result is not unique " type " \"" value "\" -> " count " items " result))
-       (if (empty? result) nil (first result))))
+    (assert (<= count 1) (str "Ambiguity: there are " count " \"" value "\" " type " objects " result))
+    (first result)))
 
 ;;
 
