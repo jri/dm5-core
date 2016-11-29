@@ -5,8 +5,7 @@
   :db/ident :dm5/entity-type
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one
-  :db/doc "A DM5 entity type (topic or assoc)"
-  :db.install/_attribute :db.part/db}
+  :db/doc "A DM5 entity type (topic or assoc)"}
 
   ;; DM5 Object
 
@@ -14,30 +13,26 @@
   :db/ident :dm5.object/uri
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/doc "A DM5 object's URI"
-  :db.install/_attribute :db.part/db}
+  :db/doc "A DM5 object's URI"}
 
  {:db/id #db/id[:db.part/db]
   :db/ident :dm5.object/type
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/doc "A DM5 object's type (URI)"
-  :db.install/_attribute :db.part/db}
+  :db/doc "A DM5 object's type (URI)"}
 
  {:db/id #db/id[:db.part/db]
   :db/ident :dm5.object/string-value
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/fulltext true
-  :db/doc "A DM5 object's string value"
-  :db.install/_attribute :db.part/db}
+  :db/doc "A DM5 object's string value"}
 
  {:db/id #db/id[:db.part/db]
   :db/ident :dm5.object/number-value
   :db/valueType :db.type/long
   :db/cardinality :db.cardinality/one
-  :db/doc "A DM5 object's long value"
-  :db.install/_attribute :db.part/db}
+  :db/doc "A DM5 object's long value"}
 
   ;; Role
 
@@ -45,15 +40,13 @@
   :db/ident :dm5.role/player
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one
-  :db/doc "A role's player ID"
-  :db.install/_attribute :db.part/db}
+  :db/doc "A role's player ID"}
 
  {:db/id #db/id[:db.part/db]
   :db/ident :dm5.role/type
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
-  :db/doc "A role's type (URI)"
-  :db.install/_attribute :db.part/db}
+  :db/doc "A role's type (URI)"}
 
   ;; Association
 
@@ -62,8 +55,7 @@
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/many
   :db/isComponent true
-  :db/doc "An association's 2 roles"
-  :db.install/_attribute :db.part/db}
+  :db/doc "An association's 2 roles"}
 
   ;; Entity-type enum values
 
