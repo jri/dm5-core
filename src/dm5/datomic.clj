@@ -11,7 +11,7 @@
   (def conn (d/connect db-uri)))
 
 ;; install schema
-(let [schema-file "../dm5-core/resources/dm5-core-schema.edn"]
+(let [schema-file "resources/dm5-core-schema.edn"]
   (println "Loading schema file" schema-file "\n")
   (d/transact conn (load-file schema-file)))
 
