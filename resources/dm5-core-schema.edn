@@ -51,6 +51,6 @@
 
   ;; Entity-type enum values
 
-  [:db/add "topic" :db/ident :dm5.entity-type/topic]
-  [:db/add "assoc" :db/ident :dm5.entity-type/assoc]
+  {:db/ident :dm5.entity-type/topic}
+  {:db/ident :dm5.entity-type/assoc}
 ]
